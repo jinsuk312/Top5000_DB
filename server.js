@@ -85,7 +85,7 @@ function artistSearch(){
 
 function rangeSearch(){
     inquirer
-    // where we ask for the year range for songs to search for
+    // where we ask for the position range for songs to search for
     .prompt([
         {
             name: "start",
@@ -130,30 +130,43 @@ function rangeSearch(){
             runSearch();
         })
     })
-    // function to handle a song name searching //
-    function songSearch(){
-        inquirer
+}
+//function to handle looking for artists that appear more than once //
+function multiSearch() {
+    // create query to select artist from the table top5000 that show more than once
+    var query = 'SELECT artist from top5000 GROUP BY artist HAVING count(*) > 1';
+    connection.query(query, function (err, res) {
+        // iterate through the response and console.log each of their artist names
+        for (var i = 0; i < res.length; i++) {
+            console.log(res[i].artist);
+        }
+        // take the user back to the beginning and prompt the user again
+        runSearch();
+    });
+}
+// function to handle a song name searching //
+function songSearch() {
+    inquirer
         .prompt({
             name: "song",
             type: "input",
             message: "What song would you like to look for?"
         })
         // use user input to create a SQL query
-        .then(function(answer){
+        .then(function (answer) {
             // create a SQL query to select all from table top5000 where song is equal to our answer from the prompt
             var query = "SELECT * FROM top5000 WHERE ?";
             // send our query and replace ? with, where song matches our answer.song
-            connection.query(query, {song: answer.song}, function(err, res){
+            connection.query(query, { song: answer.song }, function (err, res) {
                 // console.log the FIRST match that you find
                 console.log(
-                    "Position: " + res[0].position + 
-                    " || Song: " + res[0].song + 
-                    " || Artist: " + res[0].artist + 
+                    "Position: " + res[0].position +
+                    " || Song: " + res[0].song +
+                    " || Artist: " + res[0].artist +
                     " || Year: " + res[0].year
                 );
                 // we bring the user back to the beginning and prompt the user again
                 runSearch();
             })
         })
-    }
 }
