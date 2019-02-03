@@ -4,7 +4,7 @@ DROP DATABASE IF EXISTS top_songsDB;
 CREATE database top_songsDB;
 -- use the database called top_songsDB --
 USE top_songsDB;
--- create a table called top5000 --
+-- create a table called top5000 that matches the properties to the data in .csv file --
 CREATE TABLE top5000 (
     -- create a numeric column called position and make it so it cannot be null -- 
   position INT NOT NULL,
@@ -23,5 +23,5 @@ CREATE TABLE top5000 (
     -- set the primary key as position --
   PRIMARY KEY (position)
 );
--- display all the data from the table called top5000 --
+-- display all the data from the table called top5000, to make sure that the data is display properly --
 SELECT * FROM top5000;
